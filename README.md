@@ -1,7 +1,6 @@
-# ORIE-5270 Big Data Technology Project
+# ORIE-5270 Big Data Technology Project - Multi Factor Trading Strategy
 
 ## Overview
-
 This project develops a data-driven stock return prediction pipeline by combining web-scraped market data, market news, engineered financial signals, rolling predictive models, and portfolio backtesting. The workflow covers the full process from raw data collection to feature engineering, predictive modeling, model validation, and performance evaluation.
 
 In this project, it integrates three main categories of signals:
@@ -252,6 +251,8 @@ A general order for running the project is:
 ## Authors
 
 ORIE-5270 Big Data Technology Project Team
+
+Boxuan Hu, Chenyu Li, Jialu Xu, Zijie Wang
 
 ---
 
