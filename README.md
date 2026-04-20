@@ -252,7 +252,7 @@ A general order for running the project is:
 
 ORIE-5270 Big Data Technology Project Team
 
-Boxuan Hu, Chenyu Li, Jialu Xu, Zijie Wang
+Boxuan Hu, Chenyu Li, Jialu Xu, Yingjie Wang
 
 ---
 
