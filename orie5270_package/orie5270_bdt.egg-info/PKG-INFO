@@ -1,0 +1,126 @@
+Metadata-Version: 2.4
+Name: orie5270-bdt
+Version: 0.1.0
+Summary: Reusable Python package for the ORIE 5270 Big Data Technology multi-factor trading strategy project.
+Author: ORIE 5270 Big Data Technology Project Team
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: numpy>=1.23
+Requires-Dist: pandas>=1.5
+Requires-Dist: scikit-learn>=1.2
+Requires-Dist: statsmodels>=0.13
+Requires-Dist: scipy>=1.9
+Requires-Dist: matplotlib>=3.6
+Provides-Extra: dev
+Requires-Dist: pytest>=7; extra == "dev"
+Requires-Dist: ruff>=0.1; extra == "dev"
+
+# orie5270-bdt
+
+Reusable Python package for the ORIE 5270 Big Data Technology multi-factor trading strategy project.
+
+The package wraps the main project workflow into importable modules:
+
+- data loading and panel preparation
+- rolling OLS, Ridge, and Lasso next-day return prediction
+- equal-weight quantile portfolio backtesting
+- IC, Rank IC, Sharpe, annualized return, volatility, and max drawdown metrics
+- command-line scripts for model fitting and backtesting
+
+## Install locally
+
+From the package folder:
+
+```bash
+pip install -e .
+```
+
+For tests and linting:
+
+```bash
+pip install -e ".[dev]"
+```
+
+## Example Python usage
+
+```python
+from orie5270_bdt import ModelConfig, BacktestConfig, load_table, fit_predict_rolling, quantile_backtest
+
+panel = load_table("Dataset/merged_df.csv")
+
+features = [
+    "sentiment_score",
+    "sentiment_signal",
+    "liquidity_factor",
+    "size_factor",
+    "momentum",
+    "volatility",
+]
+
+model_config = ModelConfig(
+    date_col="date",
+    asset_col="ticker",
+    price_col="close",
+    feature_cols=features,
+    model_type="ridge",
+    window=252,
+    min_periods=126,
+    alpha=1.0,
+)
+
+predictions = fit_predict_rolling(panel, model_config)
+
+bt_config = BacktestConfig(
+    date_col="date",
+    asset_col="ticker",
+    prediction_col="prediction",
+    realized_return_col="target_return",
+    n_quantiles=5,
+    long_quantile=5,
+    short_quantile=1,
+)
+
+result = quantile_backtest(predictions, bt_config)
+print(result["summary"])
+```
+
+## Example CLI usage
+
+```bash
+orie5270-fit \
+  --input Dataset/merged_df.csv \
+  --output Model/ridge_predictions.csv \
+  --date-col date \
+  --asset-col ticker \
+  --price-col close \
+  --features sentiment_score,sentiment_signal,liquidity_factor,size_factor,momentum,volatility \
+  --model ridge \
+  --window 252 \
+  --min-periods 126 \
+  --alpha 1.0
+
+orie5270-backtest \
+  --input Model/ridge_predictions.csv \
+  --output-dir Model/backtest_output \
+  --n-quantiles 5 \
+  --long-quantile 5 \
+  --short-quantile 1
+```
+
+## Suggested project integration
+
+Place this package folder at the root of the GitHub project:
+
+```text
+ORIE-5270-Big-Data-Technology/
+├── Dataset/
+├── Factor Analysis/
+├── Model/
+├── Web Scrapping/
+├── orie5270_bdt/
+├── tests/
+├── pyproject.toml
+└── README.md
+```
+
+The exact factor column names may differ in your dataset. Update the `features` list or CLI `--features` argument to match the columns in `Dataset/merged_df.csv`.

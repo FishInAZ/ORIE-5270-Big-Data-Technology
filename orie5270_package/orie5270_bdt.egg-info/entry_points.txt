@@ -1,0 +1,3 @@
+[console_scripts]
+orie5270-backtest = orie5270_bdt.cli:backtest_command
+orie5270-fit = orie5270_bdt.cli:fit_command
